@@ -10,6 +10,15 @@ std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessor
         professors[i-1] = i;
     }
 
+    if (numberOfSlots == numberOfProfessors) {
+        Instance instance(numberOfSlots, numberOfProfessors);
+        for (int i = 0; i < numberOfSlots; i++) {
+            instance.delegate(professors[i], i);
+        }
+        instances.push_back(instance);
+        return instances;
+    }
+
     int sizeOfSubset = numberOfSlots - numberOfProfessors + 1;
     std::vector<std::vector<int>> initialSubsets;
     for (int i = 0; i < numberOfProfessors; i++) {
@@ -32,8 +41,31 @@ std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessor
 
     instances.push_back(instance);
 
-    //TODO: generalize for all subsets grow and shrink
-    
+    //TODO: generalize for all subsets grow and shrink to follow the pattern
+    std::vector<std::vector<int>> subsets;
+    int shrinkingIndex = 0;
+    int increasingIndex = 1;
+    for (int i = 0; i < initialSubsets.size(); i++) {
+        std::vector<int> subset = initialSubsets[i];
+        if (i == shrinkingIndex) {
+            subset.pop_back();
+        } else if (i == increasingIndex) {
+            subset.push_back(*subset.begin());
+        }
+        subsets.push_back(subset);
+    }
+
+    instance = Instance(numberOfSlots, numberOfProfessors);
+    slot = 0;
+    for (int i = 0; i < subsets.size(); i++) {
+        for (int j = 0; j < subsets[i].size(); j++) {
+            instance.delegate(subsets[i][j], slot);
+            slot++;
+        }
+    }
+
+    instances.push_back(instance);
+
     return instances;
 }
 
