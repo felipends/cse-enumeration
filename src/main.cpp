@@ -42,30 +42,47 @@ std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessor
     instances.push_back(instance);
 
     //TODO: generalize for all subsets grow and shrink to follow the pattern
-    std::vector<std::vector<int>> subsets;
     int shrinkingIndex = 0;
     int increasingIndex = 1;
-    for (int i = 0; i < initialSubsets.size(); i++) {
-        std::vector<int> subset = initialSubsets[i];
-        if (i == shrinkingIndex) {
-            subset.pop_back();
-        } else if (i == increasingIndex) {
-            subset.push_back(*subset.begin());
+    while(true) {
+        std::vector<std::vector<int>> subsets;
+        for (int i = 0; i < initialSubsets.size(); i++) {
+            std::vector<int> subset = initialSubsets[i];
+            if (i == shrinkingIndex && subset.size() > 1) {
+                subset.pop_back();
+            } else if (i == increasingIndex && subset.size() < numberOfSlots - numberOfProfessors + 1) {
+                subset.push_back(*subset.begin());
+            }
+
+            subsets.push_back(subset);
         }
-        subsets.push_back(subset);
-    }
 
-    instance = Instance(numberOfSlots, numberOfProfessors);
-    slot = 0;
-    for (int i = 0; i < subsets.size(); i++) {
-        for (int j = 0; j < subsets[i].size(); j++) {
-            instance.delegate(subsets[i][j], slot);
-            slot++;
+        initialSubsets = subsets;
+
+        instance = Instance(numberOfSlots, numberOfProfessors);
+        slot = 0;
+        for (int i = 0; i < subsets.size(); i++) {
+            for (int j = 0; j < subsets[i].size(); j++) {
+                instance.delegate(subsets[i][j], slot);
+                slot++;
+            }
+        }
+
+        instances.push_back(instance);
+
+        if (initialSubsets[shrinkingIndex].size() == 1) {
+            shrinkingIndex++;
+        }
+
+        if (initialSubsets[increasingIndex].size() == numberOfSlots - numberOfProfessors + 1) {
+            increasingIndex++;
+        }
+
+        if (shrinkingIndex == initialSubsets.size() - 1) {
+            break;
         }
     }
-
-    instances.push_back(instance);
-
+    
     return instances;
 }
 
