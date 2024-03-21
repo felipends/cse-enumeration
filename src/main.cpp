@@ -3,6 +3,23 @@
 #include <vector>
 #include "instance/instance.hpp"
 
+void findPermutations(int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations) {
+    if (numberOfProfessors == 0 && currentValue == numberOfSlots) {
+        permutations->push_back(*currentPermutation);
+        return;
+    }
+
+    if (numberOfProfessors == 0) {
+        return;
+    }
+
+    for (int i = 1; i <= numberOfSlots; i++) {
+        currentPermutation->push_back(i);
+        findPermutations(numberOfSlots, numberOfProfessors - 1, currentValue + i, currentPermutation, permutations);
+        currentPermutation->pop_back();
+    }
+}
+
 std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessors) {
     std::vector<Instance> instances;
     std::vector<int> professors(numberOfProfessors);
@@ -19,68 +36,18 @@ std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessor
         return instances;
     }
 
-    int sizeOfSubset = numberOfSlots - numberOfProfessors + 1;
-    std::vector<std::vector<int>> initialSubsets;
-    for (int i = 0; i < numberOfProfessors; i++) {
-        std::vector<int> subset;
-        for (int j = 0; j < sizeOfSubset; j++) {
-            subset.push_back(i+1);
-        }
-        initialSubsets.push_back(subset);
-        sizeOfSubset = 1;
-    }
-
-    Instance instance(numberOfSlots, numberOfProfessors);
-    int slot = 0;
-    for (int i = 0; i < initialSubsets.size(); i++) {
-        for (int j = 0; j < initialSubsets[i].size(); j++) {
-            instance.delegate(initialSubsets[i][j], slot);
-            slot++;
-        }
-    }
-
-    instances.push_back(instance);
-
-    //TODO: generalize for all subsets grow and shrink to follow the pattern
-    int shrinkingIndex = 0;
-    int increasingIndex = 1;
-    while(true) {
-        std::vector<std::vector<int>> subsets;
-        for (int i = 0; i < initialSubsets.size(); i++) {
-            std::vector<int> subset = initialSubsets[i];
-            if (i == shrinkingIndex && subset.size() > 1) {
-                subset.pop_back();
-            } else if (i == increasingIndex && subset.size() < numberOfSlots - numberOfProfessors + 1) {
-                subset.push_back(*subset.begin());
-            }
-
-            subsets.push_back(subset);
-        }
-
-        initialSubsets = subsets;
-
-        instance = Instance(numberOfSlots, numberOfProfessors);
-        slot = 0;
-        for (int i = 0; i < subsets.size(); i++) {
-            for (int j = 0; j < subsets[i].size(); j++) {
-                instance.delegate(subsets[i][j], slot);
-                slot++;
+    std::vector<std::vector<int>> permutations;
+    std::vector<int> currentPermutation;
+    findPermutations(numberOfSlots, numberOfProfessors, 0, &currentPermutation, &permutations);
+    for (auto permutation : permutations) {
+        Instance instance(numberOfSlots, numberOfProfessors);
+        int slot = 0;
+        for (int i = 0; i < permutation.size(); i++) {
+            for (int j = 0; j < permutation[i]; j++) {
+                instance.delegate(professors[i], slot++);
             }
         }
-
-        instances.push_back(instance);
-
-        if (initialSubsets[shrinkingIndex].size() == 1) {
-            shrinkingIndex++;
-        }
-
-        if (initialSubsets[increasingIndex].size() == numberOfSlots - numberOfProfessors + 1) {
-            increasingIndex++;
-        }
-
-        if (shrinkingIndex == initialSubsets.size() - 1) {
-            break;
-        }
+        instances.push_back(instance);                
     }
     
     return instances;
