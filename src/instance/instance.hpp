@@ -5,6 +5,9 @@
 #include <string>
 
 class Instance {
+    private:
+        int numberOfSlots;
+        int numberOfProfessors;
     public:
         Instance(int numberOfSlots, int numberOfProfessors);
         std::vector<int> professors; 
@@ -12,6 +15,8 @@ class Instance {
 
         void delegate(int professor, int slot);
 
+        int getNumSlots();
+        int getNumProfessors();
         std::string toString();
 };
 

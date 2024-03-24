@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "instance/instance.hpp"
+#include "model/model.hpp"
 
 void findPermutations(int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations) {
     if (numberOfProfessors == 0 && currentValue == numberOfSlots) {
@@ -74,7 +75,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Instances for " << i << " professors" << std::endl;
         std::vector<Instance> instances = generateInstances(size, i);
         for (auto instance : instances) {
-            std::cout << instance.toString() << std::endl;
+            Model model = Model(instance);
+            std::cout << model.solve();
         }
     }
 

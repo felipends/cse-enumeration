@@ -68,6 +68,18 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "csetjmp": "cpp",
+        "csignal": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "codecvt": "cpp",
+        "forward_list": "cpp",
+        "regex": "cpp",
+        "hash_map": "cpp",
+        "future": "cpp",
+        "scoped_allocator": "cpp",
+        "span": "cpp",
+        "valarray": "cpp"
     }
 }

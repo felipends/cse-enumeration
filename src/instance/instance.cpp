@@ -1,7 +1,7 @@
 #include "instance.hpp"
 #include <iostream>
 
-Instance::Instance(int numberOfSlots, int numberOfProfessors) {
+Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(numberOfSlots), numberOfProfessors(numberOfProfessors) {
     this->professors = std::vector<int>(numberOfProfessors);
     for (int i = 1; i <= numberOfProfessors; i++) {
         this->professors.push_back(i);
@@ -21,4 +21,12 @@ std::string Instance::toString() {
     }
     
     return result;
+}
+
+int Instance::getNumSlots() {
+    return this->numberOfSlots;
+}
+
+int Instance::getNumProfessors() {
+    return this->numberOfProfessors;
 }
