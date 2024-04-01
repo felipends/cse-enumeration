@@ -11,10 +11,13 @@ void Model::buildModel() {
     int numSlots = this->instance.getNumSlots();
     std::vector<int> numPapersProfessors(numProfessors, 0);
     for(int i = 0; i < numSlots; i++) {
-        numPapersProfessors[this->instance.advisorInSlot[i]]++;
+        numPapersProfessors[this->instance.advisorInSlot[i] - 1]++;
     }
 
     this->model = new MPSolver("ProfessorsAllocation", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING);
+
+    //initialize h_max variable
+    MPVariable* h_max = model->MakeIntVar(0, model->infinity(), "h_max");
 
     //initialize variables h_is, x_is, l_is and y_is
     std::vector<std::vector<MPVariable*>> h(numProfessors);
@@ -148,22 +151,36 @@ void Model::buildModel() {
         constraint->SetCoefficient(h[i][0], 1);
     }
 
-    // FO
-    MPObjective* objective = model->MutableObjective();
+    //add constraint h_max should be the maximum gap
     for (int i = 0; i < numProfessors; i++) {
-        for (int s = 0; s < numSlots + 1; s++) {
-            objective->SetCoefficient(h[i][s], 1);
+        for (int s = 1; s < numSlots+1; s++) {
+            MPConstraint* constraint;
+            char name[100];
+            sprintf(name, "h_max_is_greater_than_h(%d,%d)", i, s);
+            constraint = model->MakeRowConstraint(0, model->infinity(), name);
+            constraint->SetCoefficient(h_max, -1);
+            constraint->SetCoefficient(h[i][s], 1);
         }
     }
 
+    // FO
+    MPObjective* objective = model->MutableObjective();
+    // for (int i = 0; i < numProfessors; i++) {
+    //     for (int s = 0; s < numSlots + 1; s++) {
+    //         objective->SetCoefficient(h[i][s], 1);
+    //     }
+    // }
+
+    objective->SetCoefficient(h_max, 1);
     objective->SetMinimization();
 }
 
 int Model::solve() {
     MPSolver::ResultStatus status = this->model->Solve();
     if (status == MPSolver::OPTIMAL) {
-        return 1;
+        int value = this->model->Objective().Value();
+        return value;
     } else {
-        return 0;
+        return -1;
     }
 }
