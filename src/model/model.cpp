@@ -129,11 +129,12 @@ void Model::buildModel() {
     }
 
     //add constraint to know if its the last slot of professor
-    for (int s = 1; s < numSlots+1; s++) {
+    for (int s = 0; s < numSlots; s++) {
         for (int i = 0; i < numProfessors; i++) {
-            MPConstraint* constraint;
-            char name[100];
             for (int sLine = s+1; sLine < numSlots+1; sLine++) {
+                MPConstraint* constraint;
+                char name[100];
+
                 sprintf(name, "slot(%d)_isLastOf(%d)_and(%d)isnt", s, i, sLine);
                 constraint = model->MakeRowConstraint(0, model->infinity(), name);
                 constraint->SetCoefficient(x[i][sLine], -1);
