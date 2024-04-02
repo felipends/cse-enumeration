@@ -10,14 +10,12 @@ class Model {
         Instance instance;
         operations_research::MPSolver* model;
 
-        std::vector<std::vector<std::vector<int>>> solution;
-
-        void buildModel();
+        void buildModel(int hmaxValue = 0, bool useHmax = false);
     public:
         Model(Instance i);
         int solve();
-        
-        std::vector<std::vector<std::vector<int>>> getSolution();
+        void rebuildModel(int hmaxValue);
+        void printSolution();
 };
 
 #endif

@@ -6,7 +6,7 @@ Model::Model(Instance i) : instance(i) {
     this->buildModel();
 }
 
-void Model::buildModel() {
+void Model::buildModel(int hmaxValue, bool rebuild) {
     int numProfessors = this->instance.getNumProfessors();
     int numSlots = this->instance.getNumSlots();
     std::vector<int> numPapersProfessors(numProfessors, 0);
@@ -159,20 +159,24 @@ void Model::buildModel() {
             char name[100];
             sprintf(name, "h_max_is_greater_than_h(%d,%d)", i, s);
             constraint = model->MakeRowConstraint(0, model->infinity(), name);
-            constraint->SetCoefficient(h_max, -1);
-            constraint->SetCoefficient(h[i][s], 1);
+            constraint->SetCoefficient(h_max, 1);
+            constraint->SetCoefficient(h[i][s], -1);
         }
     }
 
     // FO
     MPObjective* objective = model->MutableObjective();
-    // for (int i = 0; i < numProfessors; i++) {
-    //     for (int s = 0; s < numSlots + 1; s++) {
-    //         objective->SetCoefficient(h[i][s], 1);
-    //     }
-    // }
 
-    objective->SetCoefficient(h_max, 1);
+    if (rebuild) {
+        for (int i = 0; i < numProfessors; i++) {
+            for (int s = 0; s < numSlots + 1; s++) {
+                objective->SetCoefficient(h[i][s], 1);
+            }
+        }
+    } else {
+        objective->SetCoefficient(h_max, 1);
+    }
+
     objective->SetMinimization();
 }
 
@@ -185,3 +189,33 @@ int Model::solve() {
         return -1;
     }
 }
+
+void Model::rebuildModel(int hmaxValue) {
+    this->buildModel(hmaxValue, true);
+}
+
+void Model::printSolution() {
+    int numProfessors = this->instance.getNumProfessors();
+    int numSlots = this->instance.getNumSlots();
+    std::vector<std::vector<int>> solution(numProfessors, std::vector<int>(numSlots+1, 0));
+    std::vector<MPVariable*> variables = this->model->variables();
+    for (int i = 0; i < numProfessors; i++) {
+        for (int s = 0; s < numSlots+1; s++) {
+            for (int j = 0; j < variables.size(); j++) {
+                if (variables[j]->name() == "x(" + std::to_string(i) + "," + std::to_string(s) + ")" && variables[j]->solution_value() == 1) {
+                    solution[i][s] = variables[j]->solution_value();
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int s = 1; s < numSlots+1; s++) {
+        for (int i = 0; i < numProfessors; i++) {
+            if (solution[i][s] == 1) {
+                std::cout << i+1 << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+} 

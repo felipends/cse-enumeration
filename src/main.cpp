@@ -76,7 +76,17 @@ int main(int argc, char* argv[]) {
         std::vector<Instance> instances = generateInstances(size, i);
         for (auto instance : instances) {
             Model model = Model(instance);
-            std::cout << model.solve() << std::endl;
+
+            while (true) {
+                int solutionValue = model.solve();
+                std::cout << solutionValue << std::endl;
+                model.printSolution();
+                if (solutionValue > 0) {
+                    model.rebuildModel(solutionValue);
+                    continue;
+                }
+                break;
+            }
         }
     }
 
