@@ -10,6 +10,8 @@ set(SOURCE_FILES
     ./src/model/model.hpp
     ./src/model/model.cpp
 )
-    
+
+add_compile_options(-O3 -Wall -Wextra -Wpedantic)
+
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ortools::ortools)
