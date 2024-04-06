@@ -12,7 +12,18 @@
             "args": [4],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "console": "externalTerminal",
+        },
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/enumeration",
+            "args": [4],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
         }
     ]
 }
