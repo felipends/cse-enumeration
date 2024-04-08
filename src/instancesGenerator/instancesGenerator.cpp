@@ -41,12 +41,12 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     for (auto permutation : permutations) {
         Instance instance(numberOfSlots, numberOfProfessors);
         int slot = 0;
-        for (int i = 0; i < permutation.size(); i++) {
+        for (int i = 0; (size_t) i < permutation.size(); i++) {
             for (int j = 0; j < permutation[i]; j++) {
                 instance.delegate(professors[i], slot++);
             }
         }
-        instances.push_back(instance);                
+        instances.push_back(instance);
     }
     
     return instances;

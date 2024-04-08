@@ -1,8 +1,8 @@
 #ifndef INSTANCES_GENERATOR_HPP
 #define INSTANCES_GENERATOR_HPP
 
-#include <vector>;
-#include "../instance/instance.hpp";
+#include <vector>
+#include "../instance/instance.hpp"
 
 class InstancesGenerator {
     private:

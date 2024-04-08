@@ -31,16 +31,16 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         y[i] = std::vector<MPVariable*>(numSlots+1);  
         for (int s = 0; s < numSlots+1; s++) {
             char varName[100];
-            sprintf(varName, "h(%d,%d)", i, s);
+            std::snprintf(varName, 100, "h(%d,%d)", i, s);
             h[i][s] = model->MakeBoolVar(varName);
 
-            sprintf(varName, "x(%d,%d)", i, s);
+            std::snprintf(varName, 100, "x(%d,%d)", i, s);
             x[i][s] = model->MakeBoolVar(varName);
 
-            sprintf(varName, "l(%d,%d)", i, s);
+            std::snprintf(varName, 100, "l(%d,%d)", i, s);
             l[i][s] = model->MakeBoolVar(varName);
 
-            sprintf(varName, "y(%d,%d)", i, s);
+            std::snprintf(varName, 100, "y(%d,%d)", i, s);
             y[i][s] = model->MakeBoolVar(varName);
         }
     }
@@ -50,7 +50,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         MPConstraint* constraint;
         char name[100];
         for (int i = 0; i < numProfessors; i++) {
-            sprintf(name, "slot(%d)_has(%d)", s, i);
+            std::snprintf(name, 100, "slot(%d)_has(%d)", s, i);
             constraint = model->MakeRowConstraint(-model->infinity(), 0, name);
             constraint->SetCoefficient(y[i][s], 1);
             constraint->SetCoefficient(x[i][s], -1);
@@ -62,7 +62,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         int c = numPapersProfessors[i];
         MPConstraint* constraint;
         char name[100];
-        sprintf(name, "prof(%d)_hasC", i);
+        std::snprintf(name, 100, "prof(%d)_hasC", i);
         constraint = model->MakeRowConstraint(c, c, name);
         for (int s = 1; s < numSlots+1; s++) {
             constraint->SetCoefficient(y[i][s], 1);
@@ -73,7 +73,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     for (int s = 1; s < numSlots+1; s++) {
         MPConstraint* constraint;
         char name[100];
-        sprintf(name, "slot(%d)_has1", s);
+        std::snprintf(name, 100, "slot(%d)_has1", s);
         constraint = model->MakeRowConstraint(1, 1, name);
         for (int i = 0; i < numProfessors; i++) {
             constraint->SetCoefficient(y[i][s], 1);
@@ -84,7 +84,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     for (int s = 1; s < numSlots+1; s++) {
         MPConstraint* constraint;
         char name[100];
-        sprintf(name, "slot(%d)_has3", s);
+        std::snprintf(name, 100, "slot(%d)_has3", s);
         constraint = model->MakeRowConstraint(3, 3, name);
         for (int i = 0; i < numProfessors; i++) {
             constraint->SetCoefficient(x[i][s], 1);
@@ -101,7 +101,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         MPConstraint* constraint;
 
         char name[100];
-        sprintf(name, "professor(%d)_has(%d)_avals", i, c);
+        std::snprintf(name, 100, "professor(%d)_has(%d)_avals", i, c);
         constraint = model->MakeRowConstraint(c, d, name);
 
         for (int s = 1; s < numSlots+1; s++) {
@@ -115,7 +115,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
             MPConstraint* constraint;
 
             char name[100];
-            sprintf(name, "count_gap_of(%d)_til(%d)", i, s);
+            std::snprintf(name, 100, "count_gap_of(%d)_til(%d)", i, s);
             constraint = model->MakeRowConstraint(-(model->infinity()), 1, name);
 
             for (int sLine = 0; sLine <= s-1; sLine++) {
@@ -135,7 +135,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
                 MPConstraint* constraint;
                 char name[100];
 
-                sprintf(name, "slot(%d)_isLastOf(%d)_and(%d)isnt", s, i, sLine);
+                std::snprintf(name, 100, "slot(%d)_isLastOf(%d)_and(%d)isnt", s, i, sLine);
                 constraint = model->MakeRowConstraint(0, model->infinity(), name);
                 constraint->SetCoefficient(x[i][sLine], -1);
                 constraint->SetCoefficient(l[i][s], 1);
@@ -147,7 +147,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     for (int i = 0; i < numProfessors; i++) {
         MPConstraint* constraint;
         char name[100];
-        sprintf(name, "h(%d, 0)", i);
+        std::snprintf(name, 100, "h(%d, 0)", i);
         constraint = model->MakeRowConstraint(0, 0, name);
         constraint->SetCoefficient(h[i][0], 1);
     }
@@ -157,7 +157,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         for (int s = 1; s < numSlots+1; s++) {
             MPConstraint* constraint;
             char name[100];
-            sprintf(name, "h_max_is_greater_than_h(%d,%d)", i, s);
+            std::snprintf(name, 100, "h_max_is_greater_than_h(%d,%d)", i, s);
             constraint = model->MakeRowConstraint(0, model->infinity(), name);
             constraint->SetCoefficient(h_max, 1);
             constraint->SetCoefficient(h[i][s], -1);
@@ -168,6 +168,18 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     MPObjective* objective = model->MutableObjective();
 
     if (rebuild) {
+        //add constraint h_max should be the maximum gap
+        for (int i = 0; i < numProfessors; i++) {
+            for (int s = 1; s < numSlots+1; s++) {
+                MPConstraint* constraint;
+                char name[100];
+                std::snprintf(name, 100, "h_max_value_is_greater_than_h(%d,%d)", i, s);
+                constraint = model->MakeRowConstraint(0, hmaxValue, name);
+                constraint->SetCoefficient(h[i][s], -1);
+            }
+        }
+
+        //rewrites the objective function
         for (int i = 0; i < numProfessors; i++) {
             for (int s = 0; s < numSlots + 1; s++) {
                 objective->SetCoefficient(h[i][s], 1);
@@ -201,7 +213,7 @@ void Model::printSolution() {
     std::vector<MPVariable*> variables = this->model->variables();
     for (int i = 0; i < numProfessors; i++) {
         for (int s = 0; s < numSlots+1; s++) {
-            for (int j = 0; j < variables.size(); j++) {
+            for (int j = 0; (size_t) j < variables.size(); j++) {
                 if (variables[j]->name() == "x(" + std::to_string(i) + "," + std::to_string(s) + ")" && variables[j]->solution_value() == 1) {
                     solution[i][s] = variables[j]->solution_value();
                     break;

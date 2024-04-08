@@ -80,6 +80,15 @@
         "future": "cpp",
         "scoped_allocator": "cpp",
         "span": "cpp",
-        "valarray": "cpp"
-    }
+        "valarray": "cpp",
+        "format": "cpp"
+    },
+    "emeraldwalk.runonsave": {
+        "commands": [
+          {
+            "match": "\\.cpp$",
+            "cmd": "cmake --build ${workspaceFolder}/build --target all -- -j 4"
+          }
+        ]
+      }
 }
