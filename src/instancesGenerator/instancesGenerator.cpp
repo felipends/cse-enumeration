@@ -21,10 +21,18 @@ void InstancesGenerator::findPermutations(int numberOfSlots, int numberOfProfess
 
 std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, int numberOfProfessors) {
     std::vector<Instance> instances;
-    std::vector<int> professors(numberOfProfessors);
+    std::vector<int> professors = {1, 2, 3};
+    std::vector<int> advisors;
     for (int i = 1; i <= numberOfProfessors; i++) {
-        professors[i-1] = i;
+        if (i <= numberOfSlots) {
+            advisors.push_back(i);
+        }
+        if (i > 3) {
+            professors.push_back(i);
+        }
     }
+
+    const int numberOfAdvisors = (int) advisors.size();
 
     if (numberOfSlots == numberOfProfessors) {
         Instance instance(numberOfSlots, numberOfProfessors);
@@ -37,13 +45,13 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
 
     std::vector<std::vector<int>> permutations;
     std::vector<int> currentPermutation;
-    findPermutations(numberOfSlots, numberOfProfessors, 0, &currentPermutation, &permutations);
+    findPermutations(numberOfSlots, numberOfAdvisors, 0, &currentPermutation, &permutations);
     for (auto permutation : permutations) {
-        Instance instance(numberOfSlots, numberOfProfessors);
+        Instance instance(numberOfSlots, professors.size());
         int slot = 0;
         for (int i = 0; (size_t) i < permutation.size(); i++) {
             for (int j = 0; j < permutation[i]; j++) {
-                instance.delegate(professors[i], slot++);
+                instance.delegate(advisors[i], slot++);
             }
         }
         instances.push_back(instance);

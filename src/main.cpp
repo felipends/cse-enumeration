@@ -22,10 +22,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    for (int i = 3; i <= size; i++) {
+    for (int i = 1; i <= 3*size; i++) {
         std::cout << "Instances for " << i << " professors" << std::endl;
         std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
         for (auto instance : instances) {
+            std::cout << "Instance: " << instance.toString() << std::endl;
             Model model = Model(instance);
             int solutionValue = model.solve();
             std::cout << solutionValue << std::endl;

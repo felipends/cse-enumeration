@@ -95,7 +95,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     int bound = ceil((2.0*numSlots)/numProfessors);
     for (int i = 0; i < numProfessors; i++) {
         int numProfessorPapers = numPapersProfessors[i];
-        int c = numProfessorPapers > 3 ? numProfessorPapers : 3;
+        int c = numProfessorPapers == 0 ? numProfessorPapers : 0;
         int d = std::max(numSlots, numProfessorPapers + bound) >= 3 ?std::max(numSlots, numProfessorPapers + bound) : 3;
 
         MPConstraint* constraint;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(numberOfSlots), numberOfProfessors(numberOfProfessors) {
-    this->professors = std::vector<int>(numberOfProfessors);
+    this->professors = std::vector<int>();
     for (int i = 1; i <= numberOfProfessors; i++) {
         this->professors.push_back(i);
     }
@@ -16,8 +16,15 @@ void Instance::delegate(int professor, int slot) {
 
 std::string Instance::toString() {
     std::string result = "";
+
+    result += "advisors: ";
     for (int i = 0; i < this->advisorInSlot.size(); i++) {
         result += std::to_string(this->advisorInSlot[i]) + " ";
+    }
+
+    result += "professors: ";
+    for (int i = 0; i < this->professors.size(); i++) {
+        result += std::to_string(this->professors[i]) + " ";
     }
     
     return result;
