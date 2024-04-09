@@ -10,8 +10,8 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     int numProfessors = this->instance.getNumProfessors();
     int numSlots = this->instance.getNumSlots();
     std::vector<int> numPapersProfessors(numProfessors, 0);
-    for(int i = 0; i < numSlots; i++) {
-        numPapersProfessors[this->instance.advisorInSlot[i] - 1]++;
+    for(int i = 0; i < numProfessors; i++) {
+        numPapersProfessors[i] = this->instance.getProfessor(i)->getMinimumSlots();
     }
 
     this->model = new MPSolver("ProfessorsAllocation", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING);
@@ -95,7 +95,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     int bound = ceil((2.0*numSlots)/numProfessors);
     for (int i = 0; i < numProfessors; i++) {
         int numProfessorPapers = numPapersProfessors[i];
-        int c = numProfessorPapers == 0 ? numProfessorPapers : 0;
+        int c = numProfessorPapers;
         int d = std::max(numSlots, numProfessorPapers + bound) >= 3 ?std::max(numSlots, numProfessorPapers + bound) : 3;
 
         MPConstraint* constraint;

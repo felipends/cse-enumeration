@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "professor.hpp"
 
 class Instance {
     private:
@@ -10,7 +11,7 @@ class Instance {
         int numberOfProfessors;
     public:
         Instance(int numberOfSlots, int numberOfProfessors);
-        std::vector<int> professors; 
+        std::vector<Professor*> professors; 
         std::vector<int> advisorInSlot;
 
         void delegate(int professor, int slot);
@@ -18,6 +19,8 @@ class Instance {
         int getNumSlots();
         int getNumProfessors();
         std::string toString();
+
+        Professor* getProfessor(int index);
 };
 
 #endif

@@ -7,6 +7,8 @@ set(SOURCE_FILES
     ./src/main.cpp
     ./src/instance/instance.hpp
     ./src/instance/instance.cpp
+    ./src/instance/professor.cpp
+    ./src/instance/professor.hpp
     ./src/instancesGenerator/instancesGenerator.cpp
     ./src/instancesGenerator/instancesGenerator.hpp
     ./src/model/model.hpp

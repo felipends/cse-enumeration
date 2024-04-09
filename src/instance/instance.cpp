@@ -2,9 +2,10 @@
 #include <iostream>
 
 Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(numberOfSlots), numberOfProfessors(numberOfProfessors) {
-    this->professors = std::vector<int>();
+    this->professors = std::vector<Professor*>();
     for (int i = 1; i <= numberOfProfessors; i++) {
-        this->professors.push_back(i);
+        auto professor = new Professor(i, 0, 0);
+        this->professors.push_back(professor);
     }
 
     this->advisorInSlot = std::vector<int>(numberOfSlots);
@@ -12,6 +13,7 @@ Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(num
 
 void Instance::delegate(int professor, int slot) {
     this->advisorInSlot[slot] = professor;
+    this->professors[professor - 1]->incrementMinimumSlots();
 }
 
 std::string Instance::toString() {
@@ -24,7 +26,7 @@ std::string Instance::toString() {
 
     result += "professors: ";
     for (int i = 0; i < this->professors.size(); i++) {
-        result += std::to_string(this->professors[i]) + " ";
+        result += "index: " + std::to_string(this->professors[i]->index) + " ";
     }
     
     return result;
@@ -36,4 +38,8 @@ int Instance::getNumSlots() {
 
 int Instance::getNumProfessors() {
     return this->numberOfProfessors;
+}
+
+Professor* Instance::getProfessor(int index) {
+    return this->professors[index];
 }
