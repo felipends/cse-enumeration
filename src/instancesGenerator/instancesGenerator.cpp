@@ -23,6 +23,10 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     std::vector<Instance> instances;
     std::vector<int> professors = {1, 2, 3};
     std::vector<int> advisors;
+  
+    /* Vamos supor que estamos criando a instancia para o professor 10, temos uma instancia
+     * de 6 trabalhos(numberOfSlots), logo precisamos de 12 professores
+     * logo de 1 a 6 teremos orientadores e maior do que 3 temos professores */
     for (int i = 1; i <= numberOfProfessors; i++) {
         if (i <= numberOfSlots) {
             advisors.push_back(i);
@@ -60,6 +64,7 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     return instances;
 }
 
+/* Number of slots = quantidade de trabalhos  */
 std::vector<Instance> InstancesGenerator::generateRandomInstances(int numberOfSlots, int numberOfProfessors) {
     std::vector<Instance> instances;
     
