@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "../instance/instance.hpp"
+#include <random>
+#include <algorithm>
 
 class InstancesGenerator {
     private:

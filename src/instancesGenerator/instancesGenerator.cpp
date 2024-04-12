@@ -1,4 +1,7 @@
 #include "instancesGenerator.hpp"
+#include <cstdio>
+#include <random>
+#include <iostream>
 
 InstancesGenerator::InstancesGenerator() {}
 
@@ -24,9 +27,6 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     std::vector<int> professors = {1, 2, 3};
     std::vector<int> advisors;
   
-    /* Vamos supor que estamos criando a instancia para o professor 10, temos uma instancia
-     * de 6 trabalhos(numberOfSlots), logo precisamos de 12 professores
-     * logo de 1 a 6 teremos orientadores e maior do que 3 temos professores */
     for (int i = 1; i <= numberOfProfessors; i++) {
         if (i <= numberOfSlots) {
             advisors.push_back(i);
@@ -67,8 +67,35 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
 /* Number of slots = quantidade de trabalhos  */
 std::vector<Instance> InstancesGenerator::generateRandomInstances(int numberOfSlots, int numberOfProfessors) {
     std::vector<Instance> instances;
+    std::random_device rd;  // Criação de um gerador nao deterministico
+    std::mt19937 gen(rd()); //Seed para o algoritmo de geração de numeros pseudoaleatorios Mersenne Twister
+    int min, max;
+    min = max = 1;
     
-    throw "TODO: implement this method";
+    /* Se a quantia de professores for maior ou igual a quantia de trabalhos, então o maximo de advisors disponiveis
+     * para aleatoriedade será exatamente a quantia de trabalhos, caso contrario será a quantia de professores disponiveis*/
+    max = (numberOfProfessors  >= numberOfSlots ? numberOfSlots: numberOfProfessors);
+      
+    std::uniform_int_distribution<> dist(min, max);
+    std::vector < int > advisorsPerSlot; // Indica os orientadores para cada slot
+    std::vector < int > countSlotPerAdvisor(max, 0); // Quantia de trabalhos orientados por cada professor
+    int i = 0; 
+    while(i < 1){
+        
+        /* Gera o id do advisor para cada trabalho aleatoriamente e incrementa em 1 a quantia  de trabalhos orientados por ele */
+        for(int i = 0; i < numberOfSlots; i++){
+          int advisorId = dist(gen);  
+          advisorsPerSlot.push_back(advisorId);
+          std::cout << advisorId << " ";
+          countSlotPerAdvisor[advisorId] += 1; // Talvez nao precisamos fazer essa contagem          
+        }
+        i += 1;
+      std::cout << "\n";
+    getchar();
+      
+  }
+
+    //throw "TODO: implement this method";
 
     return instances;
 }
