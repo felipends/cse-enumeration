@@ -24,10 +24,13 @@ std::string Instance::toString() {
         result += std::to_string(this->advisorInSlot[i]) + " ";
     }
 
-    result += "professors: ";
+    result += "{ professors: ";
     for (int i = 0; i < this->professors.size(); i++) {
-        result += "index: " + std::to_string(this->professors[i]->index) + " ";
+        result += "{ index: " + std::to_string(this->professors[i]->index) + " ";
+        result += "c: " + std::to_string(this->professors[i]->getMinimumSlots()) + " ";
+        result += "d: " + std::to_string(this->professors[i]->getMaximumSlots()) + "} ";
     }
+    result += " }";
     
     return result;
 }

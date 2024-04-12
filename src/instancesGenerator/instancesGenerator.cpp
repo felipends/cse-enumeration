@@ -47,14 +47,23 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     std::vector<int> currentPermutation;
     findPermutations(numberOfSlots, numberOfAdvisors, 0, &currentPermutation, &permutations);
     for (auto permutation : permutations) {
-        Instance instance(numberOfSlots, professors.size());
-        int slot = 0;
-        for (int i = 0; (size_t) i < permutation.size(); i++) {
-            for (int j = 0; j < permutation[i]; j++) {
-                instance.delegate(advisors[i], slot++);
+        std::vector<std::vector<int>> maxPermutations;
+        std::vector<int> maxCurrentPermutation;
+        findPermutations(3*numberOfSlots, numberOfProfessors, 0, &maxCurrentPermutation, &maxPermutations);
+        for (auto maxPermutation : maxPermutations) {
+            Instance instance(numberOfSlots, professors.size());
+            for (int i = 0; (size_t) i < maxPermutation.size(); i++) {
+                instance.getProfessor(i)->setMaximumSlots(maxPermutation[i]);
             }
+            
+            int slot = 0;
+            for (int i = 0; (size_t) i < permutation.size(); i++) {
+                for (int j = 0; j < permutation[i]; j++) {
+                    instance.delegate(advisors[i], slot++);
+                }
+            }
+            instances.push_back(instance);
         }
-        instances.push_back(instance);
     }
     
     return instances;
