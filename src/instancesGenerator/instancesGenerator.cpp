@@ -71,7 +71,6 @@ std::vector<Instance> InstancesGenerator::generateRandomInstances(int numberOfSl
     std::mt19937 gen(rd()); //Seed para o algoritmo de geração de numeros pseudoaleatorios Mersenne Twister
     int min, max;
     min = max = 1;
-    std::cout << "oi1" << std::endl; 
     /* Se a quantia de professores for maior ou igual a quantia de trabalhos, então o maximo de advisors disponiveis
      * para aleatoriedade será exatamente a quantia de trabalhos, caso contrario será a quantia de professores disponiveis*/
     max = (numberOfProfessors  >= numberOfSlots ? numberOfSlots: numberOfProfessors);
@@ -91,14 +90,10 @@ std::vector<Instance> InstancesGenerator::generateRandomInstances(int numberOfSl
             professors.push_back(i);
     }
     
-    std::cout << "oi2" << std::endl;
     Instance instance(numberOfSlots, professors.size());
     for(int i = 0; i < numberOfSlots; i++){
         instance.delegate(advisorsPerSlot[i], i);
     }
-    std::cout << "oi3" << std::endl;
     instances.push_back((instance));
-    //throw "TODO: implement this method";
-    std::cout << "oi" << std::endl;
     return instances;
 }

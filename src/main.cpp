@@ -22,14 +22,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    /*A quantia de professores = 3 * a quantia de trabalhos
-     * pois cada trabalho deve ter 3 professores*/
     for (int i = 1; i <= 3*size; i++) {
         std::cout << "Instances for " << i << " professors" << std::endl;
-        /* Gera a instancia para determinada quantia de professores
-         * podemos chegar em uma instancia para 18 professores */
-//        std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
-        std::vector<Instance> instances = InstancesGenerator::generateRandomInstances(size, i);
+        std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
         for (auto instance : instances) {
             std::cout << "Instance: " << instance.toString() << std::endl;
             Model model = Model(instance);
@@ -38,6 +33,25 @@ int main(int argc, char* argv[]) {
             model.printSolution();
         }
     }
-
+    getchar();
+    /* Geração de instancias aleatorias */
+    int currentSize = size;
+    int multi = 1;
+    while(currentSize <= 5* size){
+        for(int i = 1; i <= 3*currentSize; i++){
+            std::cout << "Random instances for " << i << " professors" << " and " << currentSize << " slots" << std::endl;
+            std::vector<Instance> instances = InstancesGenerator::generateRandomInstances(currentSize, i);
+            for (auto instance: instances){
+                std::cout << "Instance: " << instance.toString() << std::endl;
+                Model model = Model(instance);
+                int solutionValue = model.solve();
+                std::cout  << solutionValue << std::endl;
+                model.printSolution();
+            }
+        }
+        //getchar();
+        multi += 1;
+        currentSize = multi * size;
+    }
     return 0;
 }

@@ -13,8 +13,6 @@ Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(num
 
 void Instance::delegate(int professor, int slot) {
     this->advisorInSlot[slot] = professor;
-    std::cout << "Slot: " << slot << "tamanho advisorInSlot: " << this->advisorInSlot.size() << "\n";
-    std::cout << "Indice professor: " << professor - 1 << "tamanhoProfessor: " << this->professors.size() << "\n";
     this->professors[professor - 1]->incrementMinimumSlots();
 }
 
@@ -22,12 +20,12 @@ std::string Instance::toString() {
     std::string result = "";
 
     result += "advisors: ";
-    for (int i = 0; i < this->advisorInSlot.size(); i++) {
+    for (int i = 0; (size_t) i < this->advisorInSlot.size(); i++) {
         result += std::to_string(this->advisorInSlot[i]) + " ";
     }
 
     result += "professors: ";
-    for (int i = 0; i < this->professors.size(); i++) {
+    for (int i = 0; (size_t)i < this->professors.size(); i++) {
         result += "index: " + std::to_string(this->professors[i]->index) + " ";
     }
     
