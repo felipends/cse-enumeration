@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Instances for " << i << " professors" << std::endl;
         /* Gera a instancia para determinada quantia de professores
          * podemos chegar em uma instancia para 18 professores */
-        std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
-        std::vector<Instance> instances1 = InstancesGenerator::generateRandomInstances(size, i);
+//        std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
+        std::vector<Instance> instances = InstancesGenerator::generateRandomInstances(size, i);
         for (auto instance : instances) {
             std::cout << "Instance: " << instance.toString() << std::endl;
             Model model = Model(instance);

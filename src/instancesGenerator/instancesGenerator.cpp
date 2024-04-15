@@ -71,31 +71,34 @@ std::vector<Instance> InstancesGenerator::generateRandomInstances(int numberOfSl
     std::mt19937 gen(rd()); //Seed para o algoritmo de geração de numeros pseudoaleatorios Mersenne Twister
     int min, max;
     min = max = 1;
-    
+    std::cout << "oi1" << std::endl; 
     /* Se a quantia de professores for maior ou igual a quantia de trabalhos, então o maximo de advisors disponiveis
      * para aleatoriedade será exatamente a quantia de trabalhos, caso contrario será a quantia de professores disponiveis*/
     max = (numberOfProfessors  >= numberOfSlots ? numberOfSlots: numberOfProfessors);
       
     std::uniform_int_distribution<> dist(min, max);
     std::vector < int > advisorsPerSlot; // Indica os orientadores para cada slot
-    std::vector < int > countSlotPerAdvisor(max, 0); // Quantia de trabalhos orientados por cada professor
-    int i = 0; 
-    while(i < 1){
-        
-        /* Gera o id do advisor para cada trabalho aleatoriamente e incrementa em 1 a quantia  de trabalhos orientados por ele */
-        for(int i = 0; i < numberOfSlots; i++){
-          int advisorId = dist(gen);  
-          advisorsPerSlot.push_back(advisorId);
-          std::cout << advisorId << " ";
-          countSlotPerAdvisor[advisorId] += 1; // Talvez nao precisamos fazer essa contagem          
-        }
-        i += 1;
-      std::cout << "\n";
-    getchar();
-      
-  }
+    std::vector < int > professors = {1, 2,3};
+     
+    /* O valor armazenado no vector indica o advisor daquele slot, logo advisorsPerSlot[0] = 1, significa dizer que o advisor do slot 0 é 1*/
+    for(int i = 0; i < numberOfSlots; i++){
+        advisorsPerSlot.push_back(dist(gen));
+    }
+    
+    for(int i = 1; i <= numberOfProfessors; i++){
 
+        if(i > 3)
+            professors.push_back(i);
+    }
+    
+    std::cout << "oi2" << std::endl;
+    Instance instance(numberOfSlots, professors.size());
+    for(int i = 0; i < numberOfSlots; i++){
+        instance.delegate(advisorsPerSlot[i], i);
+    }
+    std::cout << "oi3" << std::endl;
+    instances.push_back((instance));
     //throw "TODO: implement this method";
-
+    std::cout << "oi" << std::endl;
     return instances;
 }

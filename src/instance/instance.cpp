@@ -13,6 +13,8 @@ Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(num
 
 void Instance::delegate(int professor, int slot) {
     this->advisorInSlot[slot] = professor;
+    std::cout << "Slot: " << slot << "tamanho advisorInSlot: " << this->advisorInSlot.size() << "\n";
+    std::cout << "Indice professor: " << professor - 1 << "tamanhoProfessor: " << this->professors.size() << "\n";
     this->professors[professor - 1]->incrementMinimumSlots();
 }
 
