@@ -16,6 +16,8 @@ class Model {
         int solve();
         void rebuildModel(int hmaxValue);
         void printSolution();
+
+        std::string getSolutionAsJSON();
 };
 
 #endif

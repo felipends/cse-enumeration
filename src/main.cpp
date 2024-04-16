@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "instance/instance.hpp"
@@ -22,17 +23,40 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    //initialize json file to write solutions
+    std::fstream jsonFile;
+    jsonFile.open("solution.json", std::ios::out);
+    jsonFile << "{\n";
+
     for (int i = 1; i <= 3*size; i++) {
+        jsonFile << "\"" << i << "_professors\": [\n";
         std::cout << "Instances for " << i << " professors" << std::endl;
         std::vector<Instance> instances = InstancesGenerator::generateInstances(size, i);
+        int instanceIndex = 0;
         for (auto instance : instances) {
-            std::cout << "Instance: " << instance.toString() << std::endl;
             Model model = Model(instance);
             int solutionValue = model.solve();
-            std::cout << solutionValue << std::endl;
-            model.printSolution();
+
+            //write solution to json
+            if (instanceIndex == instances.size() - 1) {
+                jsonFile << model.getSolutionAsJSON() << "\n";
+            } else {
+                jsonFile << model.getSolutionAsJSON() << ",\n";
+            }
+            instanceIndex++;
+        }
+
+        std::cout << "Done" << std::endl;
+
+        if (i == 3*size) {
+            jsonFile << "]\n";
+        } else {
+            jsonFile << "],\n";
         }
     }
+
+    jsonFile << "}\n";
+    jsonFile.close();
 
     return 0;
 }

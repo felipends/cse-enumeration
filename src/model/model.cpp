@@ -230,4 +230,45 @@ void Model::printSolution() {
         }
         std::cout << std::endl;
     }
-} 
+}
+
+std::string Model::getSolutionAsJSON() {
+    int numProfessors = this->instance.getNumProfessors();
+    int numSlots = this->instance.getNumSlots();
+    std::vector<std::vector<int>> solution(numProfessors, std::vector<int>(numSlots+1, 0));
+    std::vector<MPVariable*> variables = this->model->variables();
+    int solutionValue = this->model->Objective().Value();
+    for (int i = 0; i < numProfessors; i++) {
+        for (int s = 0; s < numSlots+1; s++) {
+            for (int j = 0; (size_t) j < variables.size(); j++) {
+                if (variables[j]->name() == "x(" + std::to_string(i) + "," + std::to_string(s) + ")" && variables[j]->solution_value() == 1) {
+                    solution[i][s] = variables[j]->solution_value();
+                    break;
+                }
+            }
+        }
+    }
+
+    std::string json = "{\n";
+    json += "\"solution\": ";
+    json += "{\n";
+    json += "\"value\": " + std::to_string(solutionValue) + ",\n";
+    json += "\"assignment\": ";
+    json += "[\n";
+    for (int s = 1; s < numSlots+1; s++) {
+        json += "[";
+        for (int i = 0; i < numProfessors; i++) {
+            if (solution[i][s] == 1) {
+                json += std::to_string(i+1) + ", ";
+            }
+        }
+        json.pop_back();
+        json.pop_back();
+        json += "],\n";
+    }
+    json.pop_back();
+    json.pop_back();
+    json += "\n]\n}\n}";
+
+    return json;
+}
