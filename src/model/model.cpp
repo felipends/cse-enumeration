@@ -96,7 +96,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
     for (int i = 0; i < numProfessors; i++) {
         int numProfessorPapers = numPapersProfessors[i];
         int c = numProfessorPapers;
-        int d = std::max(numSlots, numProfessorPapers + bound) >= 3 ?std::max(numSlots, numProfessorPapers + bound) : 3;
+        int d = this->instance.getProfessor(i)->getMaximumSlots();
 
         MPConstraint* constraint;
 
@@ -250,6 +250,7 @@ std::string Model::getSolutionAsJSON() {
     }
 
     std::string json = "{\n";
+    json += "\"instance\": \"" + instance.toString() + "\",\n";
     json += "\"solution\": ";
     json += "{\n";
     json += "\"value\": " + std::to_string(solutionValue) + ",\n";

@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
 
             //write solution to json
             if (instanceIndex == instances.size() - 1) {
-                jsonFile << model.getSolutionAsJSON() << "\n";
+                jsonFile << model.getSolutionAsJSON() << std::endl;
             } else {
-                jsonFile << model.getSolutionAsJSON() << ",\n";
+                jsonFile << model.getSolutionAsJSON() << "," << std::endl;
             }
             instanceIndex++;
         }

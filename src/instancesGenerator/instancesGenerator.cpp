@@ -39,13 +39,16 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
     findPermutations(numberOfSlots, numberOfAdvisors, 0, &currentPermutation, &permutations);
     std::vector<std::vector<int>> maxPermutations;
     std::vector<int> maxCurrentPermutation;
-    findPermutations(3*numberOfSlots, numberOfProfessors, 0, &maxCurrentPermutation, &maxPermutations);
+    findPermutations(3*numberOfSlots, professors.size(), 0, &maxCurrentPermutation, &maxPermutations);
 
     for (auto permutation : permutations) {
         for (auto maxPermutation : maxPermutations) {
             Instance instance(numberOfSlots, professors.size());
             for (int i = 0; (size_t) i < maxPermutation.size(); i++) {
                 instance.getProfessor(i)->setMaximumSlots(maxPermutation[i]);
+                if (numberOfAdvisors <= 3 || maxPermutation[i] < 3) {
+                    instance.getProfessor(i)->setMaximumSlots(numberOfSlots);
+                }
             }
             
             int slot = 0;

@@ -14,6 +14,9 @@ Instance::Instance(int numberOfSlots, int numberOfProfessors): numberOfSlots(num
 void Instance::delegate(int professor, int slot) {
     this->advisorInSlot[slot] = professor;
     this->professors[professor - 1]->incrementMinimumSlots();
+    if (this->professors[professor- 1]->getMinimumSlots() > this->professors[professor- 1]->getMaximumSlots()) {
+        this->professors[professor- 1]->setMaximumSlots(this->professors[professor- 1]->getMinimumSlots());
+    }
 }
 
 std::string Instance::toString() {
