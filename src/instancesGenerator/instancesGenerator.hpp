@@ -6,7 +6,7 @@
 
 class InstancesGenerator {
     private:
-        static void findPermutations(int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations);
+        static void findPermutations(int multiplier, int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations);
     public:
         InstancesGenerator();
         static std::vector<Instance> generateInstances(int numberOfSlots, int numberOfProfessors);

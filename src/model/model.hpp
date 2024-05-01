@@ -8,7 +8,7 @@
 class Model {
     private:
         Instance instance;
-        operations_research::MPSolver* model;
+        std::unique_ptr<operations_research::MPSolver> model;
 
         void buildModel(int hmaxValue = 0, bool useHmax = false);
     public:

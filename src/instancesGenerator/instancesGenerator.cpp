@@ -2,19 +2,19 @@
 
 InstancesGenerator::InstancesGenerator() {}
 
-void InstancesGenerator::findPermutations(int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations) {
-    if (numberOfProfessors == 0 && currentValue == numberOfSlots) {
+void InstancesGenerator::findPermutations(int multiplier, int numberOfSlots, int numberOfProfessors, int currentValue, std::vector<int>* currentPermutation, std::vector<std::vector<int>>* permutations) {
+    if (numberOfProfessors == 0 && currentValue == numberOfSlots * multiplier) {
         permutations->push_back(*currentPermutation);
         return;
     }
 
-    if (numberOfProfessors == 0 || currentValue >= numberOfSlots) {
+    if (numberOfProfessors == 0 || currentValue >= numberOfSlots * multiplier) {
         return;
     }
 
     for (int i = 1; i <= numberOfSlots; i++) {
         currentPermutation->push_back(i);
-        findPermutations(numberOfSlots, numberOfProfessors - 1, currentValue + i, currentPermutation, permutations);
+        findPermutations(multiplier, numberOfSlots, numberOfProfessors - 1, currentValue + i, currentPermutation, permutations);
         currentPermutation->pop_back();
     }
 }
@@ -36,10 +36,10 @@ std::vector<Instance> InstancesGenerator::generateInstances(int numberOfSlots, i
 
     std::vector<std::vector<int>> permutations;
     std::vector<int> currentPermutation;
-    findPermutations(numberOfSlots, numberOfAdvisors, 0, &currentPermutation, &permutations);
+    findPermutations(1, numberOfSlots, numberOfAdvisors, 0, &currentPermutation, &permutations);
     std::vector<std::vector<int>> maxPermutations;
     std::vector<int> maxCurrentPermutation;
-    findPermutations(3*numberOfSlots, professors.size(), 0, &maxCurrentPermutation, &maxPermutations);
+    findPermutations(3, numberOfSlots, professors.size(), 0, &maxCurrentPermutation, &maxPermutations);
 
     for (auto permutation : permutations) {
         for (auto maxPermutation : maxPermutations) {

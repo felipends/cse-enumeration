@@ -14,7 +14,7 @@ void Model::buildModel(int hmaxValue, bool rebuild) {
         numPapersProfessors[i] = this->instance.getProfessor(i)->getMinimumSlots();
     }
 
-    this->model = new MPSolver("ProfessorsAllocation", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING);
+    this->model = std::unique_ptr<MPSolver>(MPSolver::CreateSolver("CBC"));
 
     //initialize h_max variable
     MPVariable* h_max = model->MakeIntVar(0, model->infinity(), "h_max");
